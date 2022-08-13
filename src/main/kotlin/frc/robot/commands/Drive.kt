@@ -33,7 +33,7 @@ class Drive(val drivetrain: Drivetrain, val speeds: () -> Pair<Double, Double>
 
         var leftPIDGain = leftPID.calculate(measured.leftMetersPerSecond, desired.first)
         var rightPIDGain = leftPID.calculate(measured.rightMetersPerSecond, desired.second)
-        drivetrain.tankDriveVolts(speedsToSet.first, speedsToSet.second)
+        drivetrain.tankDriveVolts(desired.first, desired.second)
         /** Here you can put code that will be run periodicaly (20 times/second)
          * Here is a good place to put the code that will read in whatever inputs you're using
          * and apply the new voltage or speed to the motors.
