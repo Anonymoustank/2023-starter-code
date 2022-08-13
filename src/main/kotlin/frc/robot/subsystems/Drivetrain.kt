@@ -1,6 +1,9 @@
 package frc.robot.subsystems
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import com.revrobotics.CANSparkMax
+import com.revrobotics.CANSparkMaxLowLevel
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 
 /** Before we can program the driving of the robot, we need to program the subsystem, which will be the
  * interface for interacting with the drivetrain
@@ -10,6 +13,13 @@ class Drivetrain(
          * What do you think we should pass into the drivetrain subystem?
          * Motors? Controllers? Constants? Anything else? **/
 ) : SubsystemBase() {
+    val motorLF = CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless)
+    val motorRF = CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless)
+    val motorLB = CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless)
+    val motorRB = CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless)
+
+    val motorsRight = MotorControllerGroup(motorRF, motorRB)
+    val motorsLeft = MotorControllerGroup(motorLF, motorLB)
 
     /**
      * Here you can specify any variables you think would be helpful for the class.
@@ -17,6 +27,7 @@ class Drivetrain(
      */
 
     init {
+        motorsRight.inverted = true
         /** The code you write in here will be run as soon as a Drivetrain instance is created.
          * What do you think should go here?
          */
@@ -27,6 +38,11 @@ class Drivetrain(
         /** Here you can put code that will be run every "frame" (20 times/second). Is there
          * any useful code we could put here, or should we leave everything to commands?
          */
+    }
+
+    fun tankDriveVolts(leftVolts: Double, rightVolts: Double) {
+        motorsLeft.setVoltage(leftVolts)
+        motorsRight.setVoltage(rightVolts)
     }
 
     /** Feel free to put any functions or variables you think would be useful to have when working
