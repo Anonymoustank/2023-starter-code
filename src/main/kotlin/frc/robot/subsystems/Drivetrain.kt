@@ -3,6 +3,8 @@ package frc.robot.subsystems
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds
+import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 
 /** Before we can program the driving of the robot, we need to program the subsystem, which will be the
@@ -21,6 +23,10 @@ class Drivetrain(
     val motorsRight = MotorControllerGroup(motorRF, motorRB)
     val motorsLeft = MotorControllerGroup(motorLF, motorLB)
 
+    val encoderLF = motorLF.encoder
+    val encoderRF = motorRF.encoder
+    val encoderLB = motorLB.encoder
+    val encoderRB = motorRB.encoder
     /**
      * Here you can specify any variables you think would be helpful for the class.
      * Last year we had motorcontrollergroups and encoders initialized here.
@@ -43,6 +49,13 @@ class Drivetrain(
     fun tankDriveVolts(leftVolts: Double, rightVolts: Double) {
         motorsLeft.setVoltage(leftVolts)
         motorsRight.setVoltage(rightVolts)
+    }
+
+    fun wheelSpeeds(): DifferentialDriveWheelSpeeds {
+        return DifferentialDriveWheelSpeeds(
+                (encoderLF.velocity / 10.71) * (Math.PI * Units.inchesToMeters(6.0)) / 60, /** (revolutions per minute) * (pi * diameter, which is circumference) / 60 to get meters per second */
+                (encoderRF.velocity / 10.71) * (Math.PI * Units.inchesToMeters(6.0)) / 60
+        )
     }
 
     /** Feel free to put any functions or variables you think would be useful to have when working

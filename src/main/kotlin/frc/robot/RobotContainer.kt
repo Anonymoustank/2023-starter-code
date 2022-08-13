@@ -37,12 +37,18 @@ class RobotContainer {
     // Uncomment this line and add whatever args you made Drive take in!
     // Also make sure your drivetrain subsystem is initialized under the name drivetrain.
     // drivetrain.defaultCommand = Drive( ... )
-    val scalar = 3.0
-    val forward = controller.rightTriggerAxis
-    var rotation = controller.rightX
-    val leftSpeed = (forward + rotation) * scalar
-    val rightSpeed = (forward - rotation) * scalar
-    drivetrain.defaultCommand = Drive(drivetrain,  { -> Pair(leftSpeed, rightSpeed)})
+    drivetrain.defaultCommand = Drive(drivetrain
+
+    ) { ->
+
+      val scalar = 3.0
+      val forward = controller.rightTriggerAxis
+      var rotation = controller.rightX
+      val leftSpeed = (forward + rotation) * scalar
+      val rightSpeed = (forward - rotation) * scalar
+
+      Pair(leftSpeed, rightSpeed)
+    }
   }
 
 

@@ -1,5 +1,6 @@
 package frc.robot.commands
 
+import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.subsystems.Drivetrain
 
@@ -12,6 +13,8 @@ class Drive(val drivetrain: Drivetrain, val speeds: () -> Pair<Double, Double>
      */
 ) : CommandBase() {
 
+    val leftPID = PIDController(1.0, 1.0, 1.0)
+    val rightPID = PIDController(1.0, 0.0, 0.0)
     /** Like the DrivetrainSubsystem, are there any useful variables we should initialize?**/
 
     init {
@@ -25,7 +28,11 @@ class Drive(val drivetrain: Drivetrain, val speeds: () -> Pair<Double, Double>
 
     override fun execute() {
         super.execute()
-        var speedsToSet = speeds()
+        var desired = speeds()
+        var measured = drivetrain.wheelSpeeds()
+
+        var leftPIDGain = leftPID.calculate(measured.leftMetersPerSecond, desired.first)
+        var rightPIDGain = leftPID.calculate(measured.rightMetersPerSecond, desired.second)
         drivetrain.tankDriveVolts(speedsToSet.first, speedsToSet.second)
         /** Here you can put code that will be run periodicaly (20 times/second)
          * Here is a good place to put the code that will read in whatever inputs you're using
