@@ -58,17 +58,16 @@ with open(filename, 'r') as csvfile:
     datareader_list = list(datareader)[1:] #convert csv to list, get rid of headers at the top
     setpoint = float(datareader_list[len(datareader_list)-1][2]) #target value we're going towards (setpoint of the final row)
     for i in range(len(datareader_list)):
-        if i>0:
+        if i>0: #ignore first point because no points behind it
             if (float(datareader_list[i][2]) - float(datareader_list[i-1][2]))/(float(datareader_list[i][0]) - float(datareader_list[i-1][0]))>c: #If there's a sudden spike in the setpoint value, we mark this point's x value as x1
                 x1=float(datareader_list[i][0])
             if abs(float(datareader_list[i][1])-setpoint) < distance and x3 < 0: #If a point's y value is reeaaaally close to the setpoint, we set its x value as x3
                 x3=float(datareader_list[i][0])
-    for i in range(len(datareader_list)):
-        if i > 0 and i < len(datareader_list) - 1: #ignore first and last points because they don't have points on either side of them
-            if (float(datareader_list[i+1][1]) - float(datareader_list[i-1][1]))/(float(datareader_list[i+1][0]) - float(datareader_list[i-1][0])) > max_slope: #calculate max slope by doing slope formula on adjacent points
-                max_slope = (float(datareader_list[i+1][1]) - float(datareader_list[i-1][1]))/(float(datareader_list[i+1][0]) - float(datareader_list[i-1][0]))
-                middle_point = datareader_list[i] #the point with the max slope
-
+            if i < len(datareader_list) - 1: #ignore last point no points after it
+                 if (float(datareader_list[i+1][1]) - float(datareader_list[i-1][1]))/(float(datareader_list[i+1][0]) - float(datareader_list[i-1][0])) > max_slope: #calculate max slope by doing slope formula on adjacent points
+                    max_slope = (float(datareader_list[i+1][1]) - float(datareader_list[i-1][1]))/(float(datareader_list[i+1][0]) - float(datareader_list[i-1][0]))
+                    middle_point = datareader_list[i] #the point with the max slope
+           
     x2 = (-float(middle_point[1])/max_slope) + float(middle_point[0]) #calculate the x value of the point where the tangent line that goes through middle_point intersects the y axis
     print("x1, x2, x3: " + str(x1) + ", " + str(x2) + ", " + str(x3))
     t = x3-x2
